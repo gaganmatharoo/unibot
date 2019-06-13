@@ -23,10 +23,10 @@ def getUniv(parameters):
     #myUniv = uni.lucky(name=uniName)
     return uniName
 
-def get_loc(parameters):
+def getLoc(parameters):
     records.insert_one({"User Query: ": str(parameters)})
-    univ = parameters.get('get_loc')
-    
+    univ = parameters.get('geo-country')
+    print("Univ Name is: "  + str(univ))
     #data = uni.search(country = univ)
     return univ
 
@@ -56,30 +56,38 @@ def fetch_reply(msg, session_id):
     if response.intent.display_name == 'getUniv':
         uname = getUniv(dict(response.parameters))
         res = uni.lucky(name=uname)
-        res_str = "*_Name of the Institute:_* {}\n*_State:_* {}\n*_Country:_* {}\n*_Country Code:_* {}\n*_Domain:_* {}\n*_Web Page:_* {}\n\n".format(res.name, res.stateprov, res.country, res.country_code, res.domains, res.web_pages)
-        
-        #New Code
-        data = uname.split()
-        finalLink="*For more Information, please check this link:* https://en.wikipedia.org/wiki/"
 
-        for w in data:
-            finalLink+=w+"_"
-        
-        res_str += finalLink
 
-        #End of new code
+        if res:
+            res_str = "*_Name of the Institute:_* {}\n*_State:_* {}\n*_Country:_* {}\n*_Country Code:_* {}\n*_Domain:_* {}\n*_Web Page:_* {}\n\n".format(res.name, res.stateprov, res.country, res.country_code, res.domains, res.web_pages)
+            data = uname.split()
+            finalLink="*For more Information, please check this link:* https://en.wikipedia.org/wiki/"
+
+            for w in data:
+                finalLink+=w+"_"
+        
+            res_str += finalLink   
+
+        else:
+            res_str = "Sorry!!I have no information about this!"
+        
+        
         return res_str
 
-    elif response.intent.display_name == 'get_loc':
+    elif response.intent.display_name == 'getLoc':
         
-        uniRes = get_loc(dict(response.parameters))
+        uniRes = getLoc(dict(response.parameters))
+        print(str(uniRes))
         data = list(uni.search(country = uniRes))
+        
+        #tempRes = "Location is: {}".format(uniRes) 
 
-        final_res = "*_List of first 15 Universities(alphabetically):_*" + "\n\n"
-        for i in range(15):
-            final_res += str(i) + ".) " + data[i].name + "\n"
+        final_res = "*_List of first 35 Universities(alphabetically):_*" + "\n\n"
+        for i in range(35):
+            final_res += str(i+1) + ".) " + data[i].name + "\n"
             
         return final_res
+        #return str(tempRes)
 
     elif response.intent.display_name == 'getImage':
         
@@ -89,4 +97,5 @@ def fetch_reply(msg, session_id):
 
     else:
         return response.fulfillment_text
+    
     
