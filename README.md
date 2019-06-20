@@ -12,6 +12,7 @@ California Institute of Technology
 Dav University
 Delhi Technical University
 Delhi Technical University
+Guru Nanak Dev University
 Harvard University
 Indian Institute of Management
 Indian Institute of Technology
